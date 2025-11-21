@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Heartfelt Apology</title>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+/* Reset */
+* { margin:0; padding:0; box-sizing:border-box; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; }
+
+/* Smooth Fade */
+body {
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    min-height: 100vh;
+    overflow-x: hidden;
+    animation: fadeIn 1s ease forwards;
+}
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+/* Cursor Hearts */
+.cursor-heart {
+    position: fixed;
+    color: #ff4d6d;
+    font-size: 20px;
+    pointer-events: none;
+    animation: cursorFloat 1s ease-out forwards;
+}
+@keyframes cursorFloat { 0%{transform:translateY(0);opacity:1} 100%{transform:translateY(-25px);opacity:0} }
+
+/* Floating Quotes */
+.floating-quote {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ff4d6d;
+    font-size: 1.1rem;
+    animation: quoteUp 5s ease-out forwards;
+}
+@keyframes quoteUp { from { transform: translate(-50%,0); opacity:1 } to { transform: translate(-50%,-80px); opacity:0 } }
+
+/* Background */
+.love-bg {
+    position: fixed; inset:0;
+    background-image:
+        radial-gradient(circle at 20% 30%, rgba(255,77,109,0.2) 0%, transparent 60%),
+        radial-gradient(circle at 80% 70%, rgba(255,154,158,0.2) 0%, transparent 60%);
+    z-index: -1;
+}
+
+/* Main Layout */
+.container { text-align:center; padding:20px; }
+
+/* HEART */
+.heart-container {
+    height:150px;
+    display:flex; justify-content:center; align-items:center;
+}
+.heart {
+    width: min(90px,20vw);
+    height: min(80px,18vw);
+    background:#ff4d6d;
+    position:relative;
+    transform:rotate(-45deg);
+    border-radius:10px;
+    animation:heartbeat 1.5s infinite ease-in-out;
+    opacity:0; transition:1s;
+}
+.heart:before,.heart:after{ content:""; position:absolute; width:100%; height:100%; background:#ff4d6d; border-radius:50%; }
+.heart:before{ top:-50%; left:0; } .heart:after{ left:50%; top:0; }
+@keyframes heartbeat { 0%,50%,100%{ transform:rotate(-45deg) scale(1) } 25%,75%{ transform:rotate(-45deg) scale(1.15) } }
+
+/* SORRY Text */
+.sorry-message {
+    font-size:3rem; font-weight:bold;
+    background:linear-gradient(to right,#ff4d6d,#c9184a);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    opacity:0; transition:.8s;
+}
+
+/* Countdown */
+.countdown { margin-top:15px; font-size:2rem; font-weight:bold; opacity:0; transition:.8s; }
+
+/* OPTIONS SCREEN */
+.options-screen { display:none; opacity:0; transition:1s; }
+
+/* ===================== Floating Sorry Names ===================== */
+.sorry-float {
+    position: fixed;
+    bottom: 0;
+    font-weight: bold;
+    color:#ff4d6d;
+    opacity:0;
+    animation: floatUpSlow 4s forwards;
+    pointer-events:none;
+    text-shadow: 0 0 5px #fff;
+}
+@keyframes floatUpSlow {
+    0%{ transform: translateY(0); opacity:0; }
+    10%{ opacity:1; }
+    90%{ opacity:1; }
+    100%{ transform: translateY(-50vh); opacity:0; }
+}
+
+/* Names Box centered in screen (second screen) */
+.love-names-container {
+    position: absolute;
+    top:50%; left:50%;
+    transform: translate(-50%, -50%);
+    background:white;
+    width:80%; max-width:380px;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.15);
+}
+
+/* Names scroll */
+.love-names-title { font-size:1.8rem; color:#ff4d6d; margin-bottom:10px; text-align:center; }
+.love-names-scroll { max-height:160px; overflow-y:auto; padding-right:6px; }
+.love-name { padding:6px 0; border-bottom:1px dashed #ff9a9e; text-align:center; }
+
+/* ===================== Corner Buttons ===================== */
+.corner-buttons { position: fixed; inset:0; pointer-events:none; }
+.corner-option {
+    position:absolute; padding:14px 20px; font-size:1rem; border:none; border-radius:40px;
+    color:white; background: linear-gradient(to right,#ff4d6d,#c9184a); box-shadow:0 4px 12px rgba(0,0,0,0.25);
+    animation:pulse 2s infinite; display:none; pointer-events:auto;
+}
+.btn-top-left{ top:15px; left:15px; }
+.btn-top-right{ top:15px; right:15px; }
+.btn-bottom-left{ bottom:15px; left:15px; }
+.btn-bottom-right{ bottom:15px; right:15px; }
+
+/* POPUPS */
+.overlay{ position:fixed; inset:0; background:rgba(0,0,0,.4); display:none; }
+.cheat-message{ position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+    background:white; width:90%; max-width:350px; padding:25px; border-radius:20px;
+    display:none; text-align:center; animation:pop .5s ease-out forwards;
+}
+@keyframes pop{ from { transform:translate(-50%,-50%) scale(.6); opacity:0; } to{ transform:translate(-50%,-50%) scale(1); opacity:1; } }
+.close-btn{ margin-top:20px; padding:10px 25px; border:none; border-radius:50px; background:linear-gradient(to right,#ff4d6d,#c9184a); color:white; }
+
+/* Floating Hearts */
+.floating-hearts{ position:fixed; inset:0; pointer-events:none; }
+.floating-heart{ position:absolute; bottom:-50px; color:#ff4d6d; animation: floatUp linear forwards; }
+@keyframes floatUp{ to{ transform:translateY(-100vh) rotate(360deg); opacity:0; } }
+</style>
+</head>
+<body>
+
+<div class="love-bg"></div>
+
+<div class="container">
+    <!-- Heart -->
+    <div class="heart-container"><div id="heart" class="heart"></div></div>
+    <h1 id="sorryMessage" class="sorry-message">SORRY</h1>
+    <div id="countdown" class="countdown">3</div>
+
+    <!-- Options -->
+    <div id="optionsScreen" class="options-screen">
+        <div class="love-names-container">
+            <h2 class="love-names-title">Names I've Given You</h2>
+            <div id="loveNamesScroll" class="love-names-scroll"></div>
+        </div>
+
+        <!-- Corner Buttons -->
+        <div class="corner-buttons">
+            <button id="option1" class="corner-option btn-top-left"><i class="fas fa-heart"></i> Sorry</button>
+            <button id="option2" class="corner-option btn-top-right"><i class="fas fa-star"></i> Why Date Me</button>
+            <button id="option3" class="corner-option btn-bottom-left"><i class="fas fa-images"></i> Moments</button>
+            <button id="option4" class="corner-option btn-bottom-right"><i class="fas fa-infinity"></i> Love</button>
+        </div>
+    </div>
+</div>
+
+<div class="floating-hearts" id="floatingHearts"></div>
+
+<!-- POPUPS -->
+<div id="overlay" class="overlay"></div>
+
+<div id="cheat1" class="cheat-message">
+    <h2>Sorry for Everything</h2>
+    <p>My love, I am truly sorry. I know I've made mistakes and hurt you. I'm truly sorry from the bottom of my heart. You mean everything to me, and I promise to be better. Please forgive me.</p>
+    <button class="close-btn" onclick="closeCheat(1)">Close</button>
+</div>
+<div id="cheat2" class="cheat-message">
+    <h2>Why You Should Date Me</h2>
+    <p>Because I love you more than words can express. I'll always support your dreams, make you laugh when you're sad, and be your biggest fan. With me, you'll never have to face life's challenges alone.</p>
+    <button class="close-btn" onclick="closeCheat(2)">Close</button>
+</div>
+<div id="cheat3" class="cheat-message">
+    <h2>Our Moments</h2>
+    <p>Remember our first date? our first 'unofficial' date? We'd known each other for years, but that day was different. I still remember giving you those chips, talking... and then I moved closer. You reached out, touched my hand, and said, 'Your hand is so warm.' That was the moment...</p>
+    <button class="close-btn" onclick="closeCheat(3)">Close</button>
+</div>
+<div id="cheat4" class="cheat-message">
+    <h2>How Much I Love You</h2>
+    <p>I love you more than all the stars in the sky, more than all the grains of sand on every beach. My love for you is infinite and grows stronger every day. You are my sunshine, my happiness, and my everything.</p>
+    <button class="close-btn" onclick="closeCheat(4)">Close</button>
+</div>
+
+<script>
+/* Names & Sorry Messages */
+const loveNames=["Biilu","Cookie","Kareja","Sundari","Gulabo","Bacha","Buddhu","Beta"];
+const sorryNames=["Sorry Babu","Sorry Shona","Sorry Love","Sorry Darling"];
+
+/* Start Sequence */
+window.onload = () => {
+    setTimeout(()=>heart.style.opacity="1",500);
+    setTimeout(()=>sorryMessage.style.opacity="1",2000);
+    setTimeout(()=>{
+        startSorryFloating();
+        setTimeout(()=>{startCountdown();},3000);
+    },2500);
+
+    populateNames();
+    createFloatingHearts();
+};
+
+/* Floating Sorry Messages */
+function startSorryFloating() {
+    let i=0;
+    const interval=setInterval(()=>{
+        if(i>=sorryNames.length)i=0;
+        let div=document.createElement("div");
+        div.className="sorry-float";
+        div.textContent=sorryNames[i];
+        div.style.left = Math.random() * 80 + 10 + "vw"; 
+        div.style.fontSize=(1.5+Math.random()*0.6)+"rem";
+        document.body.appendChild(div);
+        setTimeout(()=>div.remove(),4000);
+        i++;
+    },900);
+    setTimeout(()=>clearInterval(interval),4000);
+}
+
+/* Populate Names */
+function populateNames(){
+    const box=document.getElementById("loveNamesScroll");
+    loveNames.forEach((n,i)=>{
+        setTimeout(()=>{
+            let div=document.createElement("div");
+            div.className="love-name"; div.textContent=n;
+            box.appendChild(div);
+        },i*200);
+    });
+}
+
+/* Countdown to next screen */
+function startCountdown(){
+    let c=3;
+    const cd=document.getElementById("countdown");
+    const int=setInterval(()=>{
+        cd.textContent=c; c--;
+        if(c<0){
+            clearInterval(int);
+            heart.style.opacity="0";
+            sorryMessage.style.opacity="0";
+            countdown.style.opacity="0";
+            setTimeout(()=>{
+                document.getElementById("optionsScreen").style.display="block";
+                /* show corner buttons */
+                document.querySelectorAll(".corner-option").forEach(b=>b.style.display="block");
+                setTimeout(()=>document.getElementById("optionsScreen").style.opacity="1",100);
+            },500);
+        }
+    },1000);
+}
+
+/* Buttons Click */
+document.getElementById("option1").onclick=e=>{showCheat(1); kiss(e);};
+document.getElementById("option2").onclick=e=>{showCheat(2); kiss(e);};
+document.getElementById("option3").onclick=e=>{showCheat(3); kiss(e);};
+document.getElementById("option4").onclick=e=>{showCheat(4); kiss(e);};
+
+/* Kiss effect */
+function kiss(e){
+    const k=document.createElement("span");
+    k.textContent="💋"; k.style.position="fixed";
+    k.style.left=e.pageX+"px"; k.style.top=e.pageY+"px";
+    k.style.animation="cursorFloat 1.5s ease-out forwards";
+    document.body.appendChild(k);
+    setTimeout(()=>k.remove(),1500);
+}
+
+/* Hover Heart Trail */
+document.addEventListener("mousemove",e=>{
+    const h=document.createElement("span");
+    h.className="cursor-heart"; h.textContent="❤";
+    h.style.left=e.pageX+"px"; h.style.top=e.pageY+"px";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),1000);
+});
+
+/* Popups */
+function showCheat(n){
+    overlay.style.display="block";
+    document.getElementById("cheat"+n).style.display="block";
+}
+function closeCheat(n){
+    overlay.style.display="none";
+    document.getElementById("cheat"+n).style.display="none";
+}
+overlay.onclick=()=>{
+    overlay.style.display="none";
+    document.querySelectorAll(".cheat-message").forEach(c=>c.style.display="none");
+};
+
+/* Floating Hearts */
+function createFloatingHearts(){
+    const box=document.getElementById("floatingHearts");
+    setInterval(()=>{
+        let h=document.createElement("div");
+        h.className="floating-heart";
+        h.textContent="❤";
+        h.style.left=Math.random()*90+"vw";
+        h.style.fontSize=(10+Math.random()*20)+"px";
+        h.style.animationDuration=(8+Math.random()*12)+"s";
+        box.appendChild(h);
+        setTimeout(()=>h.remove(),20000);
+    },1500);
+}
+
+/* Floating Quotes */
+const quotes=["You are my forever.","I choose you every day.","My heart beats for you.","You make my world soft."];
+setInterval(()=>{
+    const q=document.createElement("div");
+    q.className="floating-quote";
+    q.textContent=quotes[Math.floor(Math.random()*quotes.length)];
+    document.body.appendChild(q);
+    setTimeout(()=>q.remove(),5000);
+},10000);
+</script>
+
+</body>
+</html>
